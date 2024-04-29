@@ -38,8 +38,50 @@ const LoginPage = () => {
   };
 
   const testPDFmake = (data) => {
+    const metadata = data.metadata;
+    const {
+      bucketId,
+      pdfOnly,
+      addTitleDivider,
+      pdfFileId,
+      bookTitle,
+      author,
+      url,
+    } = metadata;
+
+    console.log('Metadata:', {
+      bucketId,
+      pdfOnly,
+      addTitleDivider,
+      pdfFileId,
+      bookTitle,
+      author,
+      url,
+    });
+
     const documentDefinition = {
       content: [],
+      //Here we set conditions for the page and overall settings
+      //some things I think we'll need
+      //characterSpacing: number: size of the letter spacing in pt
+      //alignment: 'justify',
+      // font: string: name of the font
+      // fontSize: number: size of the font in pt
+      //no 'orphan child' at end of chapter solution: https://pdfmake.github.io/docs/0.1/document-definition-object/page/
+      pageMargins: [40, 60, 40, 60], // Adjust margins as needed
+
+      //adding footer and page numbers
+      footer: (currentPage, pageCount) => {
+        return {
+          //return  ${pageCount} to see total number of pages
+          text: `Page ${currentPage} of ${pageCount}`,
+          //modify for print version, left/right side alternating
+          alignment: 'center',
+
+          fontSize: 10,
+          margin: [0, 30, 0, 0], // Margin from bottom
+        };
+      },
     };
 
     // Iterate over each question in the JSON data
@@ -52,6 +94,7 @@ const LoginPage = () => {
         margin: [0, 0, 0, 10],
       };
 
+      documentDefinition.content.push({ text: '', pageBreak: 'before' });
       documentDefinition.content.push(questionContent);
 
       // Iterate over each element in the question
@@ -61,7 +104,8 @@ const LoginPage = () => {
             text: element.value,
             fontSize: 12,
             // text margins [left, top, right, bottom]
-            margin: [20, 20, 30, 35],
+            margin: [0, 0, 0, 0],
+            alignment: 'justify',
           };
           documentDefinition.content.push(textContent);
         } else if (element.type === 'image') {
@@ -82,7 +126,7 @@ const LoginPage = () => {
     var pdfDoc = pdfmake.createPdf(documentDefinition);
     //opens pdf in a new tab
     pdfDoc.open();
-    pdfDoc.download('sample.pdf'); // Download the generated PDF
+    pdfDoc.download(`${bookTitle}`); // Download the generated PDF
   };
 
   return (

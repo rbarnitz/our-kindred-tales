@@ -103,43 +103,57 @@ const LoginPage = () => {
       margin: [0, 20, 0, 0], // Top margin
     };
     documentDefinition.content.push(authorTitle);
+    documentDefinition.content.push({ text: '', pageBreak: 'before' });
 
-    // Iterate over each question in the JSON data
-    data.questions.forEach((question) => {
-      const questionContent = {
+    const TOC = {
+      toc: {
+        // id: 'mainToc'  // optional
+        title: { text: 'Table of Contents', style: 'header' },
+      },
+    };
+    documentDefinition.content.push(TOC);
+    documentDefinition.content.push({ text: '', pageBreak: 'before' });
+
+    // variable chapter page numbers
+    const chapterPageNumbers = [];
+
+    // Iterate over each question in the JSON data to populate TOC and chapters
+    data.questions.forEach((question, index) => {
+      // Add page break before starting a new chapter
+      if (index !== 0) {
+        documentDefinition.content.push({ text: '', pageBreak: 'before' });
+      }
+
+      // Add ID for linking from TOC
+      const chapterId = `Chapter${index + 1}`;
+
+      const chapterTitle = {
         text: question.title,
         fontSize: 14,
         bold: true,
-        //questions title margins [left, top, right, bottom]
-        margin: [0, 0, 0, 10],
+        margin: [0, 0, 0, 10], // Bottom margin
+        id: chapterId, // Set ID for linking from TOC
+        tocItem: true,
       };
+      documentDefinition.content.push(chapterTitle);
 
-      // Table of Contents
-      const tocTitle = {
-        text: 'Table of Contents',
-        fontSize: 18,
-        bold: true,
-        margin: [0, 60, 0, 20], // Top margin
-      };
-      documentDefinition.content.push(tocTitle);
+      console.log(chapterTitle);
 
-      documentDefinition.content.push({ text: '', pageBreak: 'before' });
-      documentDefinition.content.push(questionContent);
+      // Record the page number for the current chapter
+      chapterPageNumbers.push({ chapterId: chapterId, pageNumber: '?' });
+      console.log('chapter page numbers', chapterPageNumbers);
 
-      // Iterate over each element in the question
+      // Iterate over each element in the chapter
       question.elements.forEach((element) => {
         if (element.type === 'text') {
           const textContent = {
             text: element.value,
             fontSize: 12,
-            // text margins [left, top, right, bottom]
-            margin: [0, 0, 0, 0],
-            alignment: 'justify',
+            margin: [20, 20, 30, 0], // Text margins
           };
           documentDefinition.content.push(textContent);
         } else if (element.type === 'image') {
           const imageContent = {
-            //image formatting here: https://pdfmake.github.io/docs/0.1/document-definition-object/images/
             image: element.value,
             width: 150, // Adjust the width as needed
           };
@@ -147,7 +161,7 @@ const LoginPage = () => {
         }
       });
 
-      // Add spacing between questions
+      // Add spacing between chapters
       documentDefinition.content.push({ text: '', margin: [0, 0, 0, 20] });
     });
 

@@ -84,6 +84,25 @@ const LoginPage = () => {
       },
     };
 
+    //creating title page
+    const titlePage = {
+      text: metadata.bookTitle,
+      fontSize: 24,
+      bold: true,
+      alignment: 'center',
+      margin: [0, 100, 0, 0], // Top margin
+    };
+    documentDefinition.content.push(titlePage);
+
+    const authorTitle = {
+      text: metadata.author,
+      fontSize: 18,
+      bold: true,
+      alignment: 'center',
+      margin: [0, 20, 0, 0], // Top margin
+    };
+    documentDefinition.content.push(authorTitle);
+
     // Iterate over each question in the JSON data
     data.questions.forEach((question) => {
       const questionContent = {

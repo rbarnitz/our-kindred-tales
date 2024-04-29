@@ -38,6 +38,7 @@ const LoginPage = () => {
   };
 
   const testPDFmake = (data) => {
+    //pulling metadata from JSON to use
     const metadata = data.metadata;
     const {
       bucketId,
@@ -112,6 +113,15 @@ const LoginPage = () => {
         //questions title margins [left, top, right, bottom]
         margin: [0, 0, 0, 10],
       };
+
+      // Table of Contents
+      const tocTitle = {
+        text: 'Table of Contents',
+        fontSize: 18,
+        bold: true,
+        margin: [0, 60, 0, 20], // Top margin
+      };
+      documentDefinition.content.push(tocTitle);
 
       documentDefinition.content.push({ text: '', pageBreak: 'before' });
       documentDefinition.content.push(questionContent);

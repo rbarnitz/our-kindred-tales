@@ -17,6 +17,7 @@ pdfMake.fonts = {
 
 // Optional: Set Roboto as the default font
 pdfMake.defaultFont = 'Roboto';
+
 // shortened book file for testing
 import testJSON from './testfile.json';
 
@@ -105,6 +106,7 @@ const LoginPage = () => {
     documentDefinition.content.push(authorTitle);
     documentDefinition.content.push({ text: '', pageBreak: 'before' });
 
+    //create table of contents
     const TOC = {
       toc: {
         // id: 'mainToc'  // optional
